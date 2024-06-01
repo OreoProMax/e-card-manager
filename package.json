@@ -1,5 +1,5 @@
 {
-  "name": "vite-project",
+  "name": "e-card-manager",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "element-plus": "^2.7.4",
     "vue": "^3.4.27"
   },
   "devDependencies": {

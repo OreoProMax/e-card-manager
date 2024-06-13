@@ -20,4 +20,7 @@ export default defineConfig({
       },
     }),
   ],
+  define: {
+    __SCRIPT_TITLE__: JSON.stringify("京东E卡管理器"),
+  },
 });

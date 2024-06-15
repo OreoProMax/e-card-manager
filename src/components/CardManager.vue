@@ -157,9 +157,9 @@ interface SummaryMethodProps<T = CardTableEntry> {
 /**
  * 计算表格各列的合计值
  */
-function getSummary(param: SummaryMethodProps): (string | number)[] {
+function getSummary(param: SummaryMethodProps): string[] {
   const { columns, data } = param;
-  const result: (string | number)[] = [];
+  const result: string[] = [];
   columns.forEach((column, index) => {
     // 第一列为序号列，不需要合计
     if (index === 0) {
@@ -187,7 +187,7 @@ function getSummary(param: SummaryMethodProps): (string | number)[] {
 
     // 只有values数组中的所有元素都是有限的数字，才将其累加求和
     if (values.every((value) => Number.isFinite(value))) {
-      result[index] = values.reduce((prev, curr) => prev + curr, 0);
+      result[index] = values.reduce((prev, curr) => prev + curr, 0).toString();
     } else {
       ElNotification({
         type: "error",

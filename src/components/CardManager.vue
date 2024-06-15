@@ -8,12 +8,7 @@
     E卡管理
   </el-button>
 
-  <el-dialog
-    v-model="dialogVisible"
-    :title="scriptTitle"
-    width="60%"
-    @open="countCards"
-  >
+  <el-dialog v-model="dialogVisible" :title="scriptTitle" @open="countCards">
     <el-table
       :data="tableData"
       show-summary
@@ -22,12 +17,12 @@
       v-loading="loading && { text: loadingText }"
       :element-loading-text="loadingText"
     >
-      <el-table-column type="index" min-width="7%" />
+      <el-table-column type="index" min-width="9%" />
       <el-table-column label="余额" prop="balance" min-width="15%" />
-      <el-table-column label="总张数" prop="totalCount" min-width="15%" />
-      <el-table-column label="已选" prop="selectedCount" min-width="15%" />
-      <el-table-column label="未选" prop="notSelectedCount" min-width="15%" />
-      <el-table-column label="操作" min-width="33%">
+      <el-table-column label="总张数" prop="totalCount" min-width="12%" />
+      <el-table-column label="已选" prop="selectedCount" min-width="10%" />
+      <el-table-column label="未选" prop="notSelectedCount" min-width="10%" />
+      <el-table-column label="操作" min-width="44%">
         <template #default="scope">
           <el-input-number
             v-model="scope.row.operationNum"

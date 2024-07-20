@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import monkey, { cdn } from "vite-plugin-monkey";
+import monkey, { cdn, util } from "vite-plugin-monkey";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -24,7 +24,16 @@ export default defineConfig({
       },
       build: {
         externalGlobals: {
-          vue: cdn.jsdelivr("Vue", "dist/vue.global.prod.js"),
+          vue: cdn.jsdelivr("Vue", "dist/vue.global.min.js").concat(
+            await util.fn2dataUrl(() => {
+              // @ts-ignore
+              window.Vue = Vue;
+            })
+          ),
+          "element-plus": cdn.jsdelivr("ElementPlus", "dist/index.full.min.js"),
+        },
+        externalResource: {
+          "element-plus/dist/index.min.css": cdn.jsdelivr(),
         },
       },
     }),

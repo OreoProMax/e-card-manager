@@ -11,11 +11,12 @@ export default defineConfig({
       userscript: {
         name: "京东E卡管理器",
         namespace: "https://github.com/OreoProMax/e-card-manager",
-        version: "1.0",
+        version: "1.1",
         description: "在京东下单页面快捷操作E卡",
         icon: "https://www.jd.com/favicon.ico",
         author: "OreoProMax",
         match: ["https://trade.jd.com/*"],
+        license: "GLWTPL",
         updateURL:
           "https://raw.githubusercontent.com/OreoProMax/e-card-manager/master/dist/e-card-manager.min.user.js",
         downloadURL:

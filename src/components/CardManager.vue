@@ -8,7 +8,33 @@
     E卡管理
   </el-button>
 
-  <el-dialog v-model="dialogVisible" :title="scriptTitle" @open="countCards">
+  <el-dialog v-model="dialogVisible" draggable overflow @open="countCards">
+    <template #header="{ titleClass }">
+      <div
+        style="
+          align-items: center;
+          display: flex;
+          justify-content: space-between;
+        "
+      >
+        <h1 :class="titleClass">{{ scriptTitle }}</h1>
+
+        <span>
+          <el-text>已选E卡总额：</el-text>
+
+          <el-text type="success">
+            {{ selectedCardValue }}
+          </el-text>
+
+          <el-text> 剩余订单金额：</el-text>
+
+          <el-text type="danger">
+            {{ orderLeftValue }}
+          </el-text>
+        </span>
+      </div>
+    </template>
+
     <el-table
       :data="tableData"
       show-summary
@@ -64,7 +90,53 @@ const scriptTitle = __SCRIPT_TITLE__;
 
 const dialogVisible = ref(false);
 
-// E卡对象，字段：element（表示该E卡的HTML元素）、id、balance、status
+const selectedCardValue = ref(0);
+const orderLeftValue = ref(0);
+
+/**
+ * 提取页面的已选E卡总额、剩余订单金额，并核验已选E卡总张数
+ */
+function extractValues(): void {
+  // 已选E卡总额的值为页面中【id为giftCardPricehidden的input元素】的value属性值
+  const selectedCardValueElement = document.querySelector(
+    "input#giftCardPricehidden"
+  );
+  selectedCardValue.value = selectedCardValueElement
+    ? Number(selectedCardValueElement.getAttribute("value"))
+    : 0;
+
+  // 剩余订单金额的值为页面中【id为sumPayPriceId的span元素】的文本内容
+  const orderLeftValueElement = document.querySelector("span#sumPayPriceId");
+  orderLeftValue.value = extractNumber(orderLeftValueElement);
+
+  // 已选E卡总张数的值为页面中【id为giftCardPriceNum的input元素】的value属性值
+  const selectedCardCountElement = document.querySelector(
+    "input#giftCardPriceNum"
+  );
+  const selectedCardCount1 = selectedCardCountElement
+    ? Number(selectedCardCountElement.getAttribute("value"))
+    : 0;
+  // 计算tableData中selectedCount列的合计值
+  const selectedCardCount2 = tableData.reduce(
+    (prev, curr) => prev + curr.selectedCount,
+    0
+  );
+  if (selectedCardCount1 !== selectedCardCount2) {
+    ElNotification({
+      type: "error",
+      title: scriptTitle,
+      message: `已选E卡总张数${selectedCardCount1}与${selectedCardCount2}不符，请尝试刷新页面！`,
+    });
+  }
+}
+
+/**
+ * E卡对象
+ * @property {HTMLElement} element - 在页面上对应的HTML元素
+ * @property {string} id - 卡号
+ * @property {number} balance - 余额
+ * @property {number} status - 状态，0表示已选，1表示未选
+ */
 interface Card {
   element: HTMLElement;
   id: string;
@@ -111,9 +183,17 @@ function countCards(): void {
   });
 
   countTableData();
+  extractValues();
 }
 
-// E卡表格条目对象，字段：balance、totalCount、selectedCount、notSelectedCount、operationNum（表示本次操作的数量）
+/**
+ * E卡表格条目对象
+ * @property {number} balance - 余额
+ * @property {number} totalCount - 总张数
+ * @property {number} selectedCount - 已选张数
+ * @property {number} notSelectedCount - 未选张数
+ * @property {number} operationNum - 本次操作的数量
+ */
 interface CardTableEntry {
   balance: number;
   totalCount: number;
